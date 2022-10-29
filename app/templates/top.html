@@ -1,0 +1,33 @@
+<!-- トップ画面 -->
+
+{% extends "base.html" %}
+
+{% block title %}トップ{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row align-items-start">
+        <div class="col-md-4"></div>
+        <div class="col-md-4 text-left box1 box-h">
+            <h1>ログイン</h1>
+
+            <!-- ログイン試行後のステータス表示 -->
+            {% if status == "user_notfound" %}
+            <p>ユーザが見つかりません。新規登録をしてください。</p>
+            {% elif status == "logout" %}
+            <p>ログアウトが完了しました。</p>
+            {% endif %}
+
+            <!-- ログイン入力フォーム -->
+            <form action="/login" method="post">
+                <h6 class="mt-3">ユーザ</h6>
+                <input type="text" name="user_name" placeholder="user_name" class="form-control" required><br>
+                <h6>パスワード</h6>
+                <input type="password" name="password" placeholder="password" class="form-control" required><br>
+                <input type="submit" value="ログイン" class="btn btn-primary w-100 mb-4">
+            </form>
+            <a href="/newcomer">アカウント登録はこちら</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+body {
+    background : #EEEEEE;
+    padding-top : 5rem;
+}
+
+.box1 {
+    position: relative;
+    background: #fff0cd;
+    box-shadow: 0px 0px 0px 5px #fff0cd;
+    border: dashed 2px white;
+    padding: 0.2em 0.5em;
+    color: #454545;
+}
+.box1:after {
+    position: absolute;
+    content: '';
+    right: -7px;
+    top: -7px;
+    border-width: 0 15px 15px 0;
+    border-style: solid;
+    border-color: #ffdb88 #fff #ffdb88;
+    box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.15);
+}
+.box1 p {
+    margin: 0; 
+    padding: 0;
+}
+
+.box2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+input[type=checkbox] {
+	transform: scale(2);
+	margin: 0 6px 0 0;
+}
+
