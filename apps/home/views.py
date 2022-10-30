@@ -1,12 +1,9 @@
-from flask import Blueprint, Flask, render_template, request
+from flask import Blueprint, Flask, render_template, request, current_app
 from models.models import Medicine, User
 from models.database import db_session
 from datetime import timedelta, date
 from flask import session, redirect, url_for
 from hashlib import sha256
-import logging
-from flask_debugtoolbar import DebugToolbarExtension
-from apps import key
 from apps.session_check import session_check
 
 # Blueprintでhomeアプリを生成する
@@ -17,18 +14,13 @@ home = Blueprint(
     static_folder="static",
 )
 
-# ログレベルの設定
-# home.logger.setLevel(logging.DEBUG)
-# リダイレクトを中断しないようにする
-# home.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
-# DebugToolbarExtensionsアプリケーションをセットする
-# toolbar = DebugToolbarExtension(home)
-
 
 # ホーム画面
 @home.route("/index")
 def index():
-    # home.logger.debug("/index")
+    logger = current_app.logger
+    # ログに出力
+    logger.debug("/index")
 
     # セッション情報をチェックしユーザ名を取得
     name = session_check()
