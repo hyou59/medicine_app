@@ -1,4 +1,4 @@
-from app.app import app
+from apps.app_移行する import app
 
 
 if __name__ == "__main__":

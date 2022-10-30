@@ -1,0 +1,10 @@
+.box2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+input[type=checkbox] {
+	transform: scale(2);
+	margin: 0 6px 0 0;
+}
