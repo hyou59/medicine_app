@@ -1,15 +1,15 @@
 <!-- カレンダー表示画面 -->
 
-{% extends "home/base.html" %}
+{% extends "base.html" %}
 
 {% block title %}カレンダー{% endblock %}
 
 {% block content %}
-<div class="container mt-3 box1">
+<div class="mx-auto dt-home-main dt-main-box1">
     <!-- FullCalendarライブラリをインポート -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.css">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.js"></script>
-    <script type="text/javascript" src="{{ url_for('home.static', filename='js/calendar.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/calendar.js') }}"></script>
     <div id='calendar' class="bg-light"></div>
 </div>
 {% endblock %}

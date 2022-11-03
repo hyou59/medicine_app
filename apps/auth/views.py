@@ -1,9 +1,10 @@
-from flask import Blueprint, render_template, request
-from flask import session, redirect, url_for
-from hashlib import sha256
-from models.models import User
-from models.database import db_session
-from apps import key
+from flask import Blueprint, render_template, flash, redirect, url_for
+from apps.auth.forms import LoginForm, NewUserForm
+# dbをimportする
+from apps.app import db
+# Userクラスをimportする
+from apps.auth.models import User
+from flask_login import login_user, logout_user, login_required
 
 # Blueprintでauthアプリを生成する
 auth = Blueprint(
@@ -13,82 +14,70 @@ auth = Blueprint(
     static_folder="static",
 )
 
+
 # ログイン画面
 @auth.route("/")
-@auth.route("/top")
-def top():
-    # ステータスを取得
-    status = request.args.get("status")
-    return render_template("auth/top.html", status=status)
-
-
-# ログイン時の処理
-@auth.route("/login", methods=["post"])
+@auth.route("/login", methods=["GET", "POST"])
 def login():
-    # フォームからユーザ名を取得
-    user_name = request.form["user_name"]
-    # usersテーブルから対象のレコードを抽出する
-    user = User.query.filter_by(user_name=user_name).first()
+
+    # LoginFormをインスタンス化する
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        # 一致するユーザーを取得する
+        user = User.query.filter_by(user_name=form.user_name.data).first()
+
+        # ユーザーが存在しパスワードが一致する場合はログインを許可する
+        if user is not None and user.verify_password(form.password.data):
+            login_user(user)
+            return redirect(url_for("home.home"))
+
+        # ログイン失敗時のメッセージを表示
+        flash("ユーザー名またはパスワードが異なります。")
     
-    if user:
-        password = request.form["password"]
-        # 対象のユーザがあれば、パスワードにユーザ名とソルトを加えハッシュ化する
-        hashed_password = sha256((user_name + password + key.SALT).encode("utf-8")).hexdigest()
-        
-        if user.hashed_password == hashed_password:
-            # パスワードが一致すれば、セッション情報にユーザ名を追加する
-            session["user_name"] = user_name
-            return redirect(url_for("home.index"))
-        
-        else:
-            # パスワードが一致しなければ、statusにuser_notfoundを設定しリダイレクト
-            return redirect(url_for("auth.top", status="user_notfound"))
-    
-    else:
-        # ユーザとパスワードの組み合わせが無ければ、statusにuser_notfoundを設定しリダイレクト
-        return redirect(url_for("auth.top", status="user_notfound"))
+    return render_template("auth/login.html", form=form)
+
+
+# アカウント新規登録画面
+@auth.route("/signup", methods=["GET", "POST"])
+def signup():
+
+    # NewUserFormをインスタンス化する
+    form = NewUserForm()
+
+    # ボタン押下時にフォームの値をバリデートする
+    if form.validate_on_submit():
+        # ユーザーを作成する
+        user = User(
+            user_name=form.user_name.data,
+            password=form.password.data,
+        )
+
+        # ユーザー名の重複チェックをする
+        if user.is_duplicate_user():
+            # ユーザー名が既に登録されていればリダイレクトする
+            flash("指定のユーザーは登録済です。")
+            return redirect(url_for("auth.signup"))
+
+        # ユーザーを追加してコミットする
+        db.session.add(user)
+        db.session.commit()
+
+        # ユーザー情報をセッションに格納する
+        login_user(user)
+
+        # ホーム画面へリダイレクトする
+        return redirect(url_for("home.home", form=form))
+
+    return render_template("auth/signup.html", form=form)
 
 
 # ログアウト時の処理
 @auth.route("/logout")
+@login_required
 def logout():
-    # セッション情報からユーザを削除する
-    session.pop("user_name", None)
-    # トップ画面へ移動
-    return redirect(url_for("auth.top", status="logout"))
 
+    logout_user()
 
-# アカウント新規登録画面
-@auth.route("/newcomer")
-def newcomer():
-    # ステータスを取得
-    status = request.args.get("status")
-    return render_template("auth/newcomer.html", status=status)
-
-
-# アカウント新規登録ボタン押下時
-@auth.route("/registar", methods=["post"])
-def registar():
-    # ユーザ名をフォームから取得する
-    user_name = request.form["user_name"]
-    # usersテーブルから対象のレコードを抽出する
-    user = User.query.filter_by(user_name=user_name).first()
-
-    # ユーザが既に登録されていれば、アカウント登録画面へリダイレクト
-    if user:
-        return redirect(url_for("auth.newcomer", status="exist_user"))
-
-    # ユーザが重複していなければ、アカウントを登録しログイン
-    else:
-        # パスワードをフォームから取得する
-        password = request.form["password"]
-        # パスワードにユーザ名とソルトを加えハッシュ化する
-        hashed_password = sha256((user_name + password + key.SALT).encode("utf-8")).hexdigest()
-        # usersテーブルにレコードを追加する
-        user = User(user_name, hashed_password)
-        db_session.add(user)
-        db_session.commit()
-
-        # セッション情報にユーザ名を追加する
-        session["user_name"] = user_name
-        return redirect(url_for("home.index"))
+    # ログイン画面へ移動
+    return redirect(url_for("auth.login"))

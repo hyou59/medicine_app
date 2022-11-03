@@ -1,4 +1,4 @@
-// index.htmlで使用
+// home.htmlで使用
 
 // 薬が切れる日数を参照して行の色を変える
 $(function(){

@@ -1,0 +1,87 @@
+<!-- トップ画面 -->
+
+{% extends "base.html" %}
+
+{% block title %}メニュー{% endblock %}
+
+{% block content %}
+<div class="mx-auto dt-home-main dt-main-box1">
+
+    <header>HOME</header>
+
+    <section>
+        <!-- 薬が登録されていない場合は登録をお願いする文章を表示 -->
+        <div class="dt-home-consultation">
+            {% with min_next_day = min_next_day %}
+            {% if min_next_day == None %}
+                <p>お薬が登録されていません。</p>
+                <p><a href="{{ url_for('home.medicine_register') }}">お薬新規登録画面</a>からお薬の登録を行ってください。</p>
+
+            <!-- 薬が登録されていれば診察予定日を表示 -->
+            {% else %}
+                <p>次回の診察は<span class="min-next-day"> {{ min_next_day }} </span>までに行ってください。</p>
+            {% endif %}
+            {% endwith %}
+        </div>
+
+        <!-- 薬が登録されていれば薬一覧を表示 -->
+        {% if min_next_day != None %}
+            <div class="dt-home-box1">
+                <p>服用中のお薬情報</p>
+                <div class="dt-home-box2">
+                    <p>赤色：残量が無いお薬です。</p>
+                    <p>黄色：残量がなくなるまで1週間を切っているお薬です。</p>
+                </div>
+            </div>
+
+            <table class="table table-bordered" id="table1" cellspacing="0" cellpadding="0">
+                <thead class="table-success">
+                    <tr>
+                        <th>お薬の名前</th><th>お薬の種類</th><th>残量（塗り薬の残り本数）</th><th>更新日</th>
+                        <th>お薬が切れる予測日</th><th>お薬の更新</th><th>選択削除</th>
+                    </tr>
+                </thead>
+
+                <tbody class="table-light">
+                    {% with medi_list = medi_list %}
+                    {% for medi_dict in medi_list %}
+                        <tr>
+                            <td>{{ medi_dict.medi_name }}</td>
+                            <td>{{ medi_dict.medi_type }}</td>
+                            <td>{{ medi_dict.medi_residue }}日分
+                                <!-- 塗り薬の場合は本数を表示 -->
+                                {% if medi_dict.medi_type == "塗り薬" %}
+                                    ({{ medi_dict.medi_number }}本)
+                                {% endif %}
+                            </td>
+                            <td>{{ medi_dict.updated_at }}</td>
+                            <td>{{ medi_dict.medi_date }}</td>
+                            <td>
+                                <form action="/medicine_update/{{ medi_dict.id }}">
+                                    <input type="submit" class="btn btn-primary btn-sm w-100" value="更新">
+                                </form>
+                            </td>
+                            <td style="text-align:center; vertical-align:middle;">
+                                <input type="checkbox" name="delete" form="delete" value={{ medi_dict.id }}>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    {% endwith %}
+                </tbody>
+            </table>
+
+            <div style="text-align: right">
+                <!-- medicinesのレコード削除用 -->
+                <form action="/delete" method="post" id="delete">
+                    {{ delete_form.csrf_token }}
+                    {{ delete_form.submit(class="btn btn-danger") }}
+                    <!-- <input type="submit" value="選択したお薬を削除" class="btn btn-danger"> -->
+                </form>
+            </div>
+        {% endif %}
+    </section>
+
+</div>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% endblock %}

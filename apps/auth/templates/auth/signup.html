@@ -1,0 +1,27 @@
+<!-- ユーザー新規登録画面 -->
+
+{% extends "base.html" %}
+
+{% block title %}ユーザー新規登録{% endblock %}
+
+{% block content %}
+<div class="mx-auto dt-auth-main dt-main-box1">
+
+    <header>ユーザー新規登録</header>
+
+    <!-- ユーザー新規登録入力フォーム -->
+    <section>
+        <form method="post" action="{{ url_for('auth.signup') }}">
+            {% for message in get_flashed_messages() %}
+                <div class="dt-auth-flash">{{ message }}</div>
+            {% endfor %}
+
+            {{ form.csrf_token }}
+            {{ form.user_name(class="form-control dt-auth-input", placeholder="ユーザー名") }}
+            {{ form.password(class="form-control dt-auth-input", placeholder="パスワード") }}
+            {{ form.submit(class="btn btn-md btn-primary btn-block dt-auth-btn w-100") }}
+        </form>
+    </section>
+
+</div>
+{% endblock %}

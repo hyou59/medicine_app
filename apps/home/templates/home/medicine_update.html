@@ -1,39 +1,42 @@
-<!-- お薬の追加画面 -->
+<!-- お薬の更新画面 -->
 
-{% extends "home/base.html" %}
+{% extends "base.html" %}
 
-{% block title %}お薬更新{% endblock %}
+{% block title %}お薬の更新{% endblock %}
 
 {% block content %}
-<div class="container mt-3 box1">
-    <!-- medicinesにレコード追加用 -->
-    <h3 class="mb-4">お薬の更新</h3>
-    <form action="/home/medicine_update/{{ record.id }}/post" method="post">
-        <div class="form-group">
-            <h6>お薬の名前</h6>
-            <input type="text"  name="mediName" class="form-control mb-4" value={{ record.medi_name }} required>
-        </div>
+<div class="mx-auto dt-home-medicine dt-main-box1">
 
-        <h6>お薬の種類</h6>
-        <div>
-            {% if record.medi_type == "飲み薬" %}
-                <input id="type1" type="radio" name="mediType" value="飲み薬" class=mb-4 checked disabled>
-                <label for="type1">飲み薬</label>
-                <input id="type2" type="radio" name="mediType" value="塗り薬" disabled>
-                <label for="type2">塗り薬</label>
-            {% else %}
-                <input id="type1" type="radio" name="mediType" value="飲み薬" class=mb-4 disabled>
-                <label for="type1">飲み薬</label>
-                <input id="type2" type="radio" name="mediType" value="塗り薬" checked disabled>
-                <label for="type2">塗り薬</label>
-            {% endif %}
-        </div>
+    <header class="mb-4">お薬の更新</header>
 
-        <!-- 表示・非表示切替部　飲み薬の残量、初期値は30日分 -->
-        <div id="firstBox">
-            <h6>お薬の残量</h6>
+    <section>
+        <form action="/medicine_update/{{ record.id }}" method="post">
             <div>
-                <select name="mediResidue1" class="mb-4">
+                <p>お薬の名前</p>
+                {{ form.csrf_token }}
+                {{ form.medi_name(class="form-control dt-home-input", placeholder="お薬の名前", value=record.medi_name) }}
+                <!-- <input type="text"  name="mediName" class="form-control mb-4" value={{ record.medi_name }} required> -->
+            </div>
+
+            <div>
+                <p class="mt-4 mb-2">お薬の種類</p>
+                {% if record.medi_type == "飲み薬" %}
+                    <input id="type1" type="radio" name="mediType" value="飲み薬" class=mb-4 checked disabled>
+                    <label for="type1">飲み薬</label>
+                    <input id="type2" type="radio" name="mediType" value="塗り薬" disabled>
+                    <label for="type2">塗り薬</label>
+                {% else %}
+                    <input id="type1" type="radio" name="mediType" value="飲み薬" class=mb-4 disabled>
+                    <label for="type1">飲み薬</label>
+                    <input id="type2" type="radio" name="mediType" value="塗り薬" checked disabled>
+                    <label for="type2">塗り薬</label>
+                {% endif %}
+            </div>
+
+            <!-- 表示・非表示切替部　飲み薬の残量、初期値は30日分 -->
+            <div class="selectdiv" id="firstBox">
+                <p class="mb-2">お薬の残量</p>
+                <select name="mediResidue1">
                     <option value={{ medi_residue }} selected>{{ medi_residue }}</option>
                     <option value="0">0</option>
                     <option value="1">1</option>
@@ -98,12 +101,10 @@
                     <option value="60">60</option>
                 </select> 日分
             </div>
-        </div>
 
-        <!-- 表示・非表示切替部　塗り薬の残量、初期値は3日分 -->
-        <div id="secondBox">
-            <h6>お薬の残量</h6>
-            <div>
+            <!-- 表示・非表示切替部　塗り薬の残量、初期値は3日分 -->
+            <div class="selectdiv" id="secondBox">
+                <p class="mb-2">お薬の残量</p>
                 <select name="mediResidue2" class="mb-4">
                     <option value={{ medi_residue }} selected>{{ medi_residue }}</option>
                     <option value="0">0</option>
@@ -118,49 +119,52 @@
                     <option value="9">9</option>
                     <option value="10">10</option>
                 </select> 本
-            </div> 
-        </div>
+            </div>
 
-        <!-- 表示・非表示切替部　塗り薬の１本当たりの使用可能日数、初期値は10日分 -->
-        <div id="thirdBox">
-            <h6>１本当たりの使用可能日数</h6>
-            <select name="mediOin" class="mb-4">
-                <option value={{ record.medi_oin }} selected>{{ record.medi_oin }}</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-                <option value="19">19</option>
-                <option value="20">20</option>
-                <option value="21">21</option>
-                <option value="22">22</option>
-                <option value="23">23</option>
-                <option value="24">24</option>
-                <option value="25">25</option>
-                <option value="26">26</option>
-                <option value="27">27</option>
-                <option value="28">28</option>
-                <option value="29">29</option>
-                <option value="30">30</option>
-            </select> 日分
-        </div>
+            <!-- 表示・非表示切替部　塗り薬の１本当たりの使用可能日数、初期値は10日分 -->
+            <div class="selectdiv" id="thirdBox">
+                <p class="mb-2">１本当たりの使用可能日数</p>
+                <select name="mediOin">
+                    <option value={{ record.medi_oin }} selected>{{ record.medi_oin }}</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                </select> 日分
+            </div>
 
-        <input type="submit" value="更新" class="btn btn-primary">
-    </form>
+            <!-- 更新ボタンの表示 -->
+            {{ form.submit(class="btn btn-md btn-primary btn-block dt-auth-btn w-100") }}
+            <!-- <input type="submit" value="更新" class="btn btn-primary"> -->
+        </form>
+    </section>
+    
 </div>
-<script type="text/javascript" src="{{ url_for('home.static', filename='js/medicine_display.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/medicine_display.js') }}"></script>
 {% endblock %}
