@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // 日付を選択可
         selectable: true,
 
+        // 日付をクリック時に発生するイベント
         select: function (info) {
             // 入力ダイアログ
             const eventName = prompt("イベントを入力してください");
@@ -30,4 +31,4 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     calendar.render();
-    });
+});

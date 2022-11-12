@@ -43,7 +43,7 @@ def create_app(config_key):
     # リダイレクトを中断しないようにする
     app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
     # DebugToolbarExtensionsアプリケーションをセットする
-    # toolbar = DebugToolbarExtension(app)
+    toolbar = DebugToolbarExtension(app)
 
     # authパッケージからviewsをimportする
     from apps.auth import views as auth_views

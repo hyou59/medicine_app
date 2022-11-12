@@ -16,7 +16,6 @@ auth = Blueprint(
 
 
 # ログイン画面
-@auth.route("/")
 @auth.route("/login", methods=["GET", "POST"])
 def login():
 

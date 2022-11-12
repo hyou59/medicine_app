@@ -5,17 +5,20 @@
 {% block title %}お薬新規登録{% endblock %}
 
 {% block content %}
-<div class="mx-auto dt-home-medicine dt-main-box1">
+<div class="mx-auto home-register-medicine main-background" id="select-medicine">
 
     <header class="mb-4">お薬の新規登録</header>
 
     <section>
+        <div class="mb-4">
+            <p>処方しているお薬の情報を入力し、登録ボタンを押下してください。</p>
+        </div>
+
         <form action="/medicine_register" method="post">
             <div>
-                <p>お薬の名前</p>
+                <p class="mb-1">お薬の名前</p>
                 {{ form.csrf_token }}
                 {{ form.medi_name(class="form-control dt-home-input", placeholder="お薬の名前") }}
-                <!-- <input type="text"  name="mediName" class="form-control mb-4" required> -->
             </div>
 
             <div>
@@ -27,134 +30,36 @@
             </div>
 
             <!-- 表示・非表示切替部　飲み薬の残量、初期値は30日分 -->
-            <div class="selectdiv" id="firstBox">
-                <p class="mb-2">お薬の残量</p>
-                <select name="mediResidue1">
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                    <option value="13">13</option>
-                    <option value="14">14</option>
-                    <option value="15">15</option>
-                    <option value="16">16</option>
-                    <option value="17">17</option>
-                    <option value="18">18</option>
-                    <option value="19">19</option>
-                    <option value="20">20</option>
-                    <option value="21">21</option>
-                    <option value="22">22</option>
-                    <option value="23">23</option>
-                    <option value="24">24</option>
-                    <option value="25">25</option>
-                    <option value="26">26</option>
-                    <option value="27">27</option>
-                    <option value="28">28</option>
-                    <option value="29">29</option>
-                    <option value="30" selected>30</option>
-                    <option value="31">31</option>
-                    <option value="32">32</option>
-                    <option value="33">33</option>
-                    <option value="34">34</option>
-                    <option value="35">35</option>
-                    <option value="36">36</option>
-                    <option value="37">37</option>
-                    <option value="38">38</option>
-                    <option value="39">39</option>
-                    <option value="40">40</option>
-                    <option value="41">41</option>
-                    <option value="42">42</option>
-                    <option value="43">43</option>
-                    <option value="44">44</option>
-                    <option value="45">45</option>
-                    <option value="46">46</option>
-                    <option value="47">47</option>
-                    <option value="48">48</option>
-                    <option value="49">49</option>
-                    <option value="50">50</option>
-                    <option value="51">51</option>
-                    <option value="52">52</option>
-                    <option value="53">53</option>
-                    <option value="54">54</option>
-                    <option value="55">55</option>
-                    <option value="56">56</option>
-                    <option value="57">57</option>
-                    <option value="58">58</option>
-                    <option value="59">59</option>
-                    <option value="60">60</option>
+            <div class="home-register-medicine-selectbox" id="firstBox">
+                <p>お薬の残量</p>
+                <!-- セレクトボックス生成 -->
+                <select id="selectResidue1" name="mediResidue1">
                 </select> 日分
             </div>
 
             <!-- 表示・非表示切替部　塗り薬の残量、初期値は3日分 -->
-            <div class="selectdiv" id="secondBox">
-                <p class="mb-2">お薬の残量</p>
-                <select name="mediResidue2" class="mb-4">
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3" selected>3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
+            <div class="home-register-medicine-selectbox" id="secondBox">
+                <p>お薬の残量</p>
+                <!-- セレクトボックス生成 -->
+                <select id="selectResidue2" name="mediResidue2" class="mb-4">
                 </select> 本
             </div>
 
             <!-- 表示・非表示切替部　塗り薬の１本当たりの使用可能日数、初期値は10日分 -->
-            <div class="selectdiv" id="thirdBox">
-                <p class="mb-2">１本当たりの使用可能日数</p>
-                <select name="mediOin">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10" selected>10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                        <option value="21">21</option>
-                        <option value="22">22</option>
-                        <option value="23">23</option>
-                        <option value="24">24</option>
-                        <option value="25">25</option>
-                        <option value="26">26</option>
-                        <option value="27">27</option>
-                        <option value="28">28</option>
-                        <option value="29">29</option>
-                        <option value="30">30</option>
+            <div class="home-register-medicine-selectbox" id="thirdBox">
+                <!-- セレクトボックス生成 -->
+                <p>１本当たりの使用可能日数</p>
+                <select id="selectOin" name="mediOin">
                 </select> 日分
             </div>
 
             <!-- 登録ボタンを表示 -->
-            {{ form.submit(class="btn btn-md btn-primary btn-block dt-auth-btn w-100") }}
-            <!-- <input type="submit" value="追加" class="btn btn-primary"> -->
+            {{ form.submit(class="btn btn-md btn-primary btn-block home-register-medicine-btn w-100") }}
         </form>
     </section>
 
 </div>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/register_selectbox.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/medicine_display.js') }}"></script>
 {% endblock %}

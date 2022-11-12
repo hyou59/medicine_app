@@ -31,8 +31,13 @@ class UpdateMedicineForm(FlaskForm):
     )
 
     # ユーザーフォームsubmitの文言を設定する
-    submit = SubmitField("更新")
+    submit = SubmitField("修正")
 
 
+# お薬の削除フォームクラス
 class DeleteMedicineForm(FlaskForm):
-    submit = SubmitField("選択したお薬を削除")
+    submit = SubmitField("削除")
+
+# 処方記録フォームクラス
+class MedicineExaminationForm(FlaskForm):
+    submit = SubmitField("登録")

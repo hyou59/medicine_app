@@ -5,7 +5,7 @@
 {% block title %}ログイン{% endblock %}
 
 {% block content %}
-<div class="mx-auto dt-auth-main dt-main-box1">
+<div class="mx-auto auth-login-main main-background">
 
     <header>ログイン</header>
 
@@ -13,13 +13,13 @@
     <section>
         <form action="{{ url_for('auth.login') }}" method="post">
             {% for message in get_flashed_messages() %}
-                <span class="dt-auth-flash">{{ message }}</span>
+                <span class="auth-login-flash">{{ message }}</span>
             {% endfor %}
             
             {{ form.csrf_token }}
-            {{ form.user_name(class="form-control dt-auth-input", placeholder="ユーザー名") }}
-            {{ form.password(class="form-control dt-auth-input", placeholder="パスワード") }}
-            {{ form.submit(class="btn btn-md btn-primary btn-block dt-auth-btn w-100") }}
+            {{ form.user_name(class="form-control auth-login-input", placeholder="ユーザー名") }}
+            {{ form.password(class="form-control auth-login-input", placeholder="パスワード") }}
+            {{ form.submit(class="btn btn-md btn-primary btn-block auth-login-btn w-100") }}
         </form>
     </section>
 

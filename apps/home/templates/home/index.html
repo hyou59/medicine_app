@@ -5,19 +5,19 @@
 {% block title %}トップ{% endblock %}
 
 {% block content %}
-<div class="mx-auto dt-home-main dt-main-box1">
+<div class="mx-auto home-top main-background">
 
     <header>TOP</header>
 
     <section>
-        <p>本サービスでは、服用しているお薬の残量を記録し可視化することができます。</p>
-        <p>■サービス利用画面</p>
-        <img src="{{ url_for('static', filename='images/デモ画像1.png') }}" alt="デモ画像1" class="dt-image">
-        <p>新規登録の方は<a href="{{ url_for('auth.signup') }}">こちら</a>からユーザー登録をしてください。</p>
-        <p>ユーザー登録済の方は<a href="{{ url_for('auth.login') }}">こちら</a>からログインしてください。</p>
+        <p>■本サービスの概要</p>
+        <p>　本サービスでは服用しているお薬の残量を記録し、可視化することができます。</p>
+        <p class="mt-4">■サービス利用画面</p>
+        <!-- 画像には後でフリーソフトで黒い枠を付ける -->
+        <img src="{{ url_for('static', filename='images/デモ画像1.png') }}" alt="デモ画像1" class="home-top-image">
+        <p class="mt-4"><b>新規登録</b>の方は <a href="{{ url_for('auth.signup') }}">こちら</a> から<b>ユーザー登録</b>を行ってください。</p>
+        <p class="mt-1"><b>ユーザー登録済</b>の方は <a href="{{ url_for('auth.login') }}">こちら</a> から<b>ログイン</b>を行ってください。</p>
     </section>
 
 </div>
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/home.js') }}"></script>
 {% endblock %}

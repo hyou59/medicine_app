@@ -9,7 +9,6 @@ class Medicine(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     # user_name（String(128)：ユーザ名、usersテーブルのuser_nameを外部キーとして設定）
     user_name = db.Column(db.String(128), db.ForeignKey("users.user_name"))
-    # user_name = db.Column(db.String(128))
     # mediName（String(128)：お薬の名前）
     medi_name = db.Column(db.String(128))
     # mediType（String(128)：お薬の種類(飲み薬、塗り薬)）

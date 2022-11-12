@@ -3,15 +3,16 @@ body {
     padding-top : 5rem;
 }
 
-.dt-main-box1 {
+/* 共通の背景 */
+.main-background {
     position: relative;
     background: #fff0cd;
     box-shadow: 0px 0px 0px 5px #fff0cd;
     border: dashed 2px white;
     padding: 0.2em 0.5em;
-    color: #454545;
+    color: #454544;
 }
-.dt-main-box1:after {
+.main-background:after {
     position: absolute;
     content: '';
     right: -7px;
@@ -21,161 +22,76 @@ body {
     border-color: #ffdb88 #fff #ffdb88;
     box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.15);
 }
-.dt-main-box1 p {
+.main-background p {
     margin: 0; 
     padding: 0;
 }
-
-
-/* 使用していないクラスは後で削除 */
-/* body {
-    background-color: #f5f5f5;
-} */
-/* h4 {
-   margin-top: 20px;
-} */
+/* 削除チェックボックス */
 input[type="search"] {
     background-color: #f5f5f5;
 }
-
-/* ログイン画面 */
-.dt-auth-main {
-    width: 400px;
-    margin-top: 45px;
-    height: 320px;
-}
-/* .dt-auth-main .card {
-    box-shadow: 0 12px 18px 2px rgba(34, 0, 51, 0.04), 0 6px 22px 4px
-    rgba(7, 48, 114, 0.12),
-    0 6px 10px -4px rgba(14, 13, 26, 0.12) !important;
-    border-radius: 16px;
-} */
-/* .dt-auth-main .dt-auth-login {
-    height: 280px !important;
-}
-.dt-auth-main .dt-auth-signup {
-    height: 280px !important;
-} */
-.dt-auth-main header {
-    text-align: center;
-    margin: 30px 0 0 0;
-    font-size: 34px;
-}
-.dt-auth-main section {
-    width: 300px;
-    margin: 10px auto;
-}
-
-/* ログイン画面のflash */
-.dt-auth-flash {
-    font-size: 14px;
-    color: #9c1a1c;
-}
-.dt-auth-input {
-    margin-top: 10px;
-}
-.dt-auth-btn {
-    margin: 30px 0 0 0;
-}
-.dt-search {
-    height: 28px !important;
-}
-.dt-image-content {
-    margin: 20px auto;
-    padding: 0;
-}
-.dt-image-username {
-    padding-top: 15px;
-}
-.dt-image-register-btn {
-    padding: 10px 47px 0 0;
-}
-.dt-image-content header {
-    padding: 10px 10px 0 10px;
-}
-.dt-image-content section {
-    padding: 10px 0;
-    margin: auto;
-}
-.dt-image-content footer {
-    padding: 10px;
-}
-.dt-image-content section img {
-    width: 100%;
-}
-.dt-image-file {
-    display: none;
-}
-.dt-image-submit {
-    margin-left: 10px;
-}
-
-.dt-image {
-    width: 100%;
-}
-
-
-/* ホーム画面 */
-.dt-home-main header {
-    font-size: 30px;
-    margin-bottom : 20px;
-}
-
-.dt-home-consultation {
-    font-size: 27px;
-    margin-bottom : 20px;
-}
-
-.min-next-day {
-    font-size: 33px;
-    color: #F44336;
-}
-
-.dt-home-box1 {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    font-size: 25px;
-}
-
-.dt-home-box2 {
-    font-size: 16px;
-}
-
-/* 薬の新規・更新画面 */
-.dt-home-medicine {
-    width: 400px;
-}
-.dt-home-medicine header {
-    font-size: 30px;
-}
-.dt-home-medicine p {
-    font-size: 18px;
-}
-.dt-home-input {
-    margin-top: 10px;
-}
-
+/* 薬の新規・更新画面のセレクトボックス */
 input[type=checkbox] {
 	transform: scale(2);
 	margin: 0 6px 0 0;
 }
 
-.selectdiv {
-    position: relative;
-    /*Don't really need this just for demo styling*/
-    
-    float: left;
-    min-width: 200px;
-    /* margin: 50px 33%; */
+/* トップ画面 */
+.home-top header {
+    font-size: 30px;
+    margin-bottom : 20px;
+}
+.home-top-image {
+    width: 100%;
+}
+.home-top a {
+    font-size: 19px
 }
 
-/* IE11 hide native button */
-select::-ms-expand {
+/* ホーム画面 */
+.home-main header {
+    font-size: 30px;
+    margin-bottom : 20px;
+}
+.home-main-consultation {
+    font-size: 27px;
+    margin-bottom : 20px;
+}
+.home-main-nextday {
+    font-size: 33px;
+    color: #F44336;
+}
+.home-main-taking-outsidebox {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-size: 25px;
+}
+.home-main-taking-insidebox {
+    font-size: 16px;
+}
+
+/* 薬の新規・更新画面 */
+/* 新規・更新画面は最初は非表示にし、jsで表示させちらつきを解消させる */
+.home-register-medicine {
+    width: 400px;
     display: none;
 }
-
-.selectdiv:after {
+.home-register-medicine header {
+    font-size: 30px;
+}
+.home-register-medicine-input {
+    margin-top: 10px;
+}
+.home-register-medicine-btn {
+    margin: 30px 0 0 0;
+}
+.home-register-medicine-selectbox {
+    position: relative;
+    float: left;
+    min-width: 200px;
+}
+.home-register-medicine-selectbox:after {
     content: '<>';
     font: 17px "Consolas", monospace;
     color: #333;
@@ -184,30 +100,68 @@ select::-ms-expand {
     -ms-transform: rotate(90deg);
     transform: rotate(90deg);
     right: 105px;
-    /*Adjust for position however you want*/
-    
-    top: 48px;
+
+    top: 38px;
     padding: 0 0 2px;
     border-bottom: 1px solid #999;
     /*left line */
-    
+
     position: absolute;
     pointer-events: none;
 }
-
-.selectdiv select {
+.home-register-medicine-selectbox select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    /* Add some styling */
-    
-    /* display: block; */
+
     width: 50%;
-    /* width: 200px; */
     max-width: 200px;
     height: 40px;
-    /* float: right; */
     margin: 5px 0px;
+    padding: 0px 13px;
+    font-size: 16px;
+    line-height: 1.75;
+    color: #333;
+    background-color: #ffffff;
+    background-image: none;
+    border: 1px solid #cccccc;
+    -ms-word-break: normal;
+    word-break: normal;
+}
+
+/* 受診の記録画面 */
+.home-medical_examination-selectbox {
+    position: relative;
+    float: left;
+    min-width: 120px;
+}
+.home-medical_examination-selectbox:after {
+    content: '<>';
+    font: 17px "Consolas", monospace;
+    color: #333;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+    right: 39px;
+
+    top: 11px;
+    padding: 0 0 2px;
+    border-bottom: 1px solid #999;
+    /*left line */
+
+    position: absolute;
+    pointer-events: none;
+}
+.home-medical_examination-selectbox select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    width: 68%;
+    max-width: 100px;
+    height: 35px;
+    margin: 5px 3px;
     padding: 0px 13px;
     font-size: 16px;
     line-height: 1.75;

@@ -15,7 +15,7 @@ $(function(){
         let cells = $(row.children());
         
         // 薬の残量を取得
-        let residue = cells[2].innerHTML;
+        let residue = cells[2].textContent;
 
         // 残量の数値だけを取得
         let residueDay = residue.split("日");
@@ -25,21 +25,27 @@ $(function(){
         if (residueDay <= 0) {
             $(cells).css("background-color", "#FFDBC9");
 
-        // 薬が切れる予測日が1週間以内の場合は行を黄色で表示
+        // 薬が切れる予測日まで1週間以内の場合は行を黄色で表示
         } else if (residueDay <= 7) {
             $(cells).css("background-color", "#FFFFBB");
         };
-
     }
 });
 
 
-// ドロップダウンをマウスオーバーで開くように実装しようとした
-// $('.dropdown').mouseenter(function(){
-//     if(!$('.navbar-toggle').is(':visible')) {
-//         if(!$(this).hasClass('open')) {
-//         $('.dropdown-toggle', this).trigger('click');
-//         }
-//     }
-// });
-
+// 削除ボタンの活性・非活性
+$(function(){
+    // 初期状態のボタンは無効
+    $("#del-btn").prop("disabled", true);
+    // チェックボックスの状態が変わったら（クリックされたら）
+    $("input[type='checkbox']").on('change', function () {
+        // チェックされているチェックボックスの数
+        if ($(".chk:checked").length > 0) {
+            // ボタン有効
+            $("#del-btn").prop("disabled", false);
+        } else {
+            // ボタン無効
+            $("#del-btn").prop("disabled", true);
+        }
+    });
+});
