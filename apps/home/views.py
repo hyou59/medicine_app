@@ -84,7 +84,7 @@ def home():
     return render_template("home/home.html", min_next_day=min_next_day, delete_form=delete_form, rows=res, pagination=pagination)
 
 
-# 受診記録画面
+# 処方記録画面
 @hm.route("/medical_examination", methods=["GET", "POST"])
 @login_required
 def medical_examination():
@@ -98,9 +98,10 @@ def medical_examination():
 
     # レコードの存在チェック
     if all_medicine == []:
+        medi_list = []
 
         # レコードが無ければ以降の処理をスキップ
-        return render_template("home/medical_examination.html", form=form)
+        return render_template("home/medical_examination.html", form=form, medi_list=medi_list)
 
     medi_list = []
     for medicine in all_medicine:

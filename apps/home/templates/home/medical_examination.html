@@ -10,6 +10,12 @@
     <header class="mb-4">処方記録</header>
 
     <section>
+        {% if not medi_list %}
+        <div class="mb-4">
+            <p>お薬が登録されていません。</p>
+            <p><a href="{{ url_for('home.medicine_register') }}">お薬新規登録画面</a>からお薬の登録を行ってください。</p>
+        </div>
+        {% else %}
         <div class="mb-4">
             <p>受診日と処方したお薬の量を入力後、登録ボタンを押下してください。</p>
             <p>今回処方していないお薬は、チェックを付けてください。</p>
@@ -143,6 +149,7 @@
                 {{ form.submit(class="btn btn-md btn-primary btn-block home-register-medicine-btn w-100") }}
             </div>
         </form>
+        {% endif %}
     </section>
 </div>
 

@@ -11,7 +11,7 @@
 </head>
 <body>
     <!-- ナビゲーションを作成する -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand">お薬管理アプリ</a>
 
@@ -34,30 +34,48 @@
                     {% if current_user.is_authenticated %}
                         <!-- 各ページのリンクを表示 -->
                         <li class="nav-item">
-                            <a class="btn btn-secondary" href="{{ url_for('home.home') }}">HOME</a>
+                            <a class="btn navbar-btn" href="{{ url_for('home.home') }}">
+                                <img src="{{ url_for('static', filename='images/ホーム.svg') }}" alt="ホームアイコン" class="nav-icon">
+                                HOME
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-secondary" href="{{ url_for('home.medicine_register') }}">お薬新規登録</a>
+                            <a class="btn navbar-btn" href="{{ url_for('home.medicine_register') }}">
+                                <img src="{{ url_for('static', filename='images/お薬新規登録.svg') }}" alt="お薬新規登録アイコン" class="nav-icon">
+                                お薬新規登録
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-secondary" href="{{ url_for('home.medical_examination') }}">処方記録</a>
+                            <a class="btn navbar-btn" href="{{ url_for('home.medical_examination') }}">
+                                <img src="{{ url_for('static', filename='images/処方記録.svg') }}" alt="処方記録アイコン" class="nav-icon">
+                                処方記録
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-secondary" href="{{ url_for('home.calendar') }}">カレンダー</a>
+                            <a class="btn navbar-btn" href="{{ url_for('home.calendar') }}">
+                                <img src="{{ url_for('static', filename='images/カレンダー.svg') }}" alt="カレンダーアイコン" class="nav-icon">
+                                カレンダー
+                            </a>
                         </li>
 
                         <!-- ユーザ名とログアウトのリンクを表示 -->
                         <div class="dropdown">
-                            <a class="btn btn-secondary dropdown-toggle"
+                            <a class="btn dropdown-toggle navbar-btn"
                                 role="button"
                                 id="dropdownMenuLink"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false">
+                                <img src="{{ url_for('static', filename='images/アカウント.svg') }}" alt="アカウントアイコン" class="nav-icon">
                                 {{ current_user.user_name }}
                             </a>
                         
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
-                                <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">ログアウト</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('auth.logout') }}">
+                                        <img src="{{ url_for('static', filename='images/ログアウト.svg') }}" alt="ログアウトアイコン" class="nav-icon">
+                                        ログアウト
+                                    </a>
+                                </li>
                             </ul>
                         </div>
 
@@ -65,15 +83,24 @@
                     {% else %}
                         <!-- トップリンクを表示 -->
                         <li class="nav-item">
-                            <a class="btn btn-secondary" href="{{ url_for('home.index') }}">トップ</a>
+                            <a class="btn navbar-btn" href="{{ url_for('home.index') }}">
+                                <img src="{{ url_for('static', filename='images/トップ.svg') }}" alt="トップアイコン" class="nav-icon">
+                                トップ
+                            </a>
                         </li>
                         <!-- ログインリンクを表示 -->
                         <li class="nav-item">
-                            <a class="btn btn-secondary" href="{{ url_for('auth.login') }}">ログイン</a>
+                            <a class="btn navbar-btn" href="{{ url_for('auth.login') }}">
+                                <img src="{{ url_for('static', filename='images/ログイン.svg') }}" alt="ログインアイコン" class="nav-icon">
+                                ログイン
+                            </a>
                         </li>
                         <!-- ユーザー新規登録リンクを表示 -->
                         <li class="nav-item">
-                            <a class="btn btn-secondary" href="{{ url_for('auth.signup') }}">ユーザー新規登録</a>
+                            <a class="btn navbar-btn" href="{{ url_for('auth.signup') }}">
+                                <img src="{{ url_for('static', filename='images/ユーザー登録.svg') }}" alt="ユーザー登録アイコン" class="nav-icon">
+                                ユーザー新規登録
+                            </a>
                         </li>
                     {% endif %}
 

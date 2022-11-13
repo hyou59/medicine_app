@@ -4,6 +4,15 @@ body {
 }
 
 /* 共通の背景 */
+.navbar {
+    background-color: #fb976c;
+}
+.navbar-btn {
+    color: #EEEEEE;
+}
+.nav-icon {
+    width: 20px;
+}
 .main-background {
     position: relative;
     background: #fff0cd;
