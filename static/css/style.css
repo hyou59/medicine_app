@@ -50,8 +50,11 @@ input[type=checkbox] {
     font-size: 30px;
     margin-bottom : 20px;
 }
+.home-top-images-div {
+    text-align : center;
+}
 .home-top-image {
-    width: 100%;
+    width: 80%;
 }
 .home-top a {
     font-size: 19px
@@ -63,7 +66,7 @@ input[type=checkbox] {
     margin-bottom : 20px;
 }
 .home-main-consultation {
-    font-size: 27px;
+    font-size: 21px;
     margin-bottom : 20px;
 }
 .home-main-nextday {
@@ -139,6 +142,9 @@ input[type=checkbox] {
 }
 
 /* 受診の記録画面 */
+.home-medical_examination-info {
+    font-size: 21px;
+}
 .home-medical_examination-selectbox {
     position: relative;
     float: left;
@@ -180,4 +186,13 @@ input[type=checkbox] {
     border: 1px solid #cccccc;
     -ms-word-break: normal;
     word-break: normal;
+}
+
+/* カレンダー画面 */
+.calendar_modal {
+    display: none;
+    background-color: rgba(0,0,0,.6);
+}
+.pass-value {
+    display: none;
 }

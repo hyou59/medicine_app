@@ -1,0 +1,194 @@
+<!-- カレンダー表示画面 -->
+
+{% extends "base.html" %}
+
+{% block title %}カレンダー{% endblock %}
+
+{% block content %}
+<div class="mx-auto home-main main-background">
+    <!-- 削除時にメッセージ表示 -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="alert alert-info">
+            {% for message in messages %}
+                <div>{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+    
+    <div class="mb-3">
+        <p>カレンダー画面では、登録した処方記録を閲覧することができます。</p>
+        <p>閲覧したい日付の処方記録を押下してください。</p>
+    </div>
+
+    <!-- FullCalendarライブラリをインポート -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.js"></script>
+    <div id='calendar' class="bg-light"></div>
+
+    <!-- イベント押下時のModal表示 -->
+    <div class="modal calendar_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">処方記録</h5>
+                    <button type="button" class="btn-close clossBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <table class="table table-bordered" cellspacing="0" cellpadding="0">
+                        <thead class="table-success">
+                            <tr>
+                                <th>処方したお薬名</th><th>処方したお薬の量</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modal-texttbody">
+                            <!-- ここにクリックした日付の処方記録を表示 -->
+                        </tbody>
+                    </table>
+                    <!-- 削除確認Modalを表示する削除ボタン -->
+                    <div style="text-align: center">
+                        <button type="button" class="btn btn-danger w-50" id="del-btn" data-bs-toggle="modal" data-bs-target="#delete_event">
+                            この記録を削除
+                        </button>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary closeUpBtn" data-bs-dismiss="modal">閉じる</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 削除確認のModal表示 -->
+    <div class="modal fade delete_modal" id="delete_event" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">削除の確認</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>選択した記録を削除します。よろしいですか？</p>
+                </div>
+
+                <div class="modal-footer">
+                    <form action="/calendar/delete" method="post">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                        {{ form.csrf_token }}
+                        {{ form.submit(class="btn btn-danger") }}
+                        <!-- jsからpythonにidを渡すための値設定用 -->
+                        <input type="text" class="pass-value" id="pass-value" name="pass-value" readonly></input>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/calendar_modal.js') }}"></script>
+<script>
+    let exDateList = {{ ex_date_list | tojson }};
+    let exIdList = {{ ex_id_list | tojson }};
+    let events = [];
+
+    if (exDateList.length){
+        for (let i = 0; i < exDateList.length; i++) {
+            // 文字列から日付型に変換
+            date = new Date(exDateList[i]);
+            // "-"で年月日を連結する
+            ex_date = `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
+            ex_id = exIdList[i]
+
+            // カレンダーに表示するイベントを設定
+            events.push(
+                {
+                    id : ex_id,
+                    title  : "処方記録",
+                    start  : ex_date
+                }
+            )
+        }
+    }
+
+    // カレンダー表示
+    document.addEventListener('DOMContentLoaded', function() {
+        let calendarEl = document.getElementById('calendar');
+        let calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            // ヘッダー設定
+            headerToolbar: {
+                left: "",
+                center: "title",
+            },
+            locale: "ja",
+            // 日付を選択可
+            selectable: true,
+
+            events: events,
+
+            // イベントクリック時
+            eventClick: function(info) {
+                let eventObj = info.event;
+                let csrf_token = "{{ csrf_token() }}";
+
+                // クリックしたイベントのidを取得し設定
+                document.getElementById("pass-value").setAttribute("value", eventObj.id);
+
+                // csrf設定
+                $.ajaxSetup({
+                    beforeSend: function(xhr, settings) {
+                        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain){
+                            xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                        }
+                    }
+                });
+
+                $.ajax({
+                    // ajaxによりクリックしたイベントのidを送信
+                    url: "/calendar/detail",
+                    type: "post",
+                    data: {"id": eventObj.id},
+
+                }).done(function(prescription_list) {
+                    let text_element = document.getElementById('modal-texttbody');
+                    
+                    // 子ノードを全て削除
+                    while(text_element.firstChild){
+                        text_element.removeChild(text_element.firstChild);
+                    }
+
+                    for (let i = 0; i < prescription_list.length; i++) {
+                        // モーダルに表示する処方した薬の一覧を生成
+                        let tr_element = document.createElement('tr');
+                        let td_name = document.createElement('td');
+                        let td_residue = document.createElement('td');
+                        td_name.textContent = prescription_list[i].medi_name;
+
+                        if (prescription_list[i].medi_type === "飲み薬") {
+                            td_residue.textContent = prescription_list[i].medi_residue + "日分";
+                        } else {
+                            td_residue.textContent = prescription_list[i].medi_residue + "本";
+                        }
+
+                        tr_element.appendChild(td_name);
+                        tr_element.appendChild(td_residue);
+
+                        // 指定した要素の中の末尾に挿入
+                        text_element.appendChild(tr_element);
+                    }
+                }).fail(function() {
+                    alert("エラーが発生しました。");
+                });
+
+                // モーダルを表示
+                $('.calendar_modal').fadeIn();
+            }
+        });
+        calendar.render();
+    });
+</script>
+{% endblock %}

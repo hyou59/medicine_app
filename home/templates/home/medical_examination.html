@@ -1,0 +1,98 @@
+<!-- 処方記録画面 -->
+
+{% extends "base.html" %}
+
+{% block title %}処方記録{% endblock %}
+
+{% block content %}
+<div class="mx-auto home-main main-background">
+
+    <header class="mb-4">処方記録</header>
+
+    <section>
+        <!-- 入力エラー時にメッセージ表示 -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert alert-danger">
+                {% for message in messages %}
+                    <div>{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+
+        {% if not medi_list %}
+        <div class="home-medical_examination-info mb-4">
+            <p>お薬が登録されていません。</p>
+            <p><a href="{{ url_for('home.medicine_register') }}">お薬新規登録画面</a>からお薬の登録を行ってください。</p>
+        </div>
+        {% else %}
+        <div class="mb-4">
+            <p>受診日と処方したお薬の量を入力後、登録ボタンを押下してください。</p>
+            <p>今回処方していないお薬は、チェックを付けてください。</p>
+        </div>
+
+        <form action="/medical_examination" method="post">
+            <div class="mb-4">
+                <p>受診日</p>
+                <!-- jsで初期値は本日を設定 -->
+                <input type="date" id="today" name="examinationDate" required></input>
+            </div>
+
+            <!-- 薬が登録されていれば薬一覧を表示 -->
+            <div class="home-main-taking-outsidebox">
+                <p>服用中のお薬一覧</p>
+            </div>
+
+            <table class="table table-bordered" id="table1" cellspacing="0" cellpadding="0">
+                <thead class="table-success">
+                    <tr>
+                        <th>お薬の名前</th><th>お薬の種類</th><th>残量（塗り薬の残り本数）</th>
+                        <th>処方したお薬の量</th><th>今回処方していないお薬</th>
+                    </tr>
+                </thead>
+
+                <tbody class="table-light">
+                    {% with medi_list = medi_list %}
+                    {% for row in medi_list %}
+                        <tr>
+                            <td>{{ row.medi_name }}</td>
+                            <td>{{ row.medi_type }}</td>
+                            <td>{{ row.medi_residue }}日分
+                                <!-- 塗り薬の場合は本数を表示 -->
+                                {% if row.medi_type == "塗り薬" %}
+                                    ({{ row.medi_number }}本)
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="home-medical_examination-selectbox">
+                                {% if row.medi_type == "飲み薬" %}
+                                    <!-- 飲み薬のセレクトボックス生成 -->
+                                    <select name="InternalResidue">
+                                    </select>日分
+                                {% else %}
+                                    <!-- 塗り薬のセレクトボックス生成 -->
+                                    <select name="ointResidue">
+                                    </select>本
+                                {% endif %}
+                                </div>
+                            </td>
+                            <td style="text-align:center; vertical-align:middle;">
+                                <input type="checkbox" class="chk" name="notSeen" value={{ row.id }}>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    {% endwith %}
+                </tbody>
+            </table>
+
+            <!-- 登録ボタンを表示 -->
+            <div class="d-grid gap-2 col-6 mx-auto">
+                {{ form.csrf_token }}
+                {{ form.submit(class="btn btn-md btn-primary btn-block home-register-medicine-btn w-100") }}
+            </div>
+        </form>
+        {% endif %}
+</div>
+<script type="text/javascript" src="{{ url_for('static', filename='js/medical_ex_calendar.js') }}"></script>
+{% endblock %}

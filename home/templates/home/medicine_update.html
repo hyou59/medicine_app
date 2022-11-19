@@ -40,7 +40,7 @@
             <div class="home-register-medicine-selectbox" id="firstBox">
                 <p>お薬の残量</p>
                 <!-- セレクトボックス生成 -->
-                <select id="selectResidue1" name="mediResidue1">
+                <select id="InternalResidue" name="InternalResidue">
                 </select>日分
             </div>
 
@@ -48,7 +48,7 @@
             <div class="home-register-medicine-selectbox" id="secondBox">
                 <p>お薬の残量</p>
                 <!-- セレクトボックス生成 -->
-                <select id="selectResidue2" class="mb-4" name="mediResidue2">
+                <select id="ointResidue" class="mb-4" name="ointResidue">
                 </select>本
             </div>
 
@@ -76,7 +76,7 @@
         // 飲み薬が選択されている時
         if (mediType === "飲み薬") {
             // 飲み薬の残量のセレクトボックス生成
-            let selectResidue1 = document.getElementById("selectResidue1");
+            let selectResidue1 = document.getElementById("InternalResidue");
             for (let i = 0; i <= 60; i++) {
                 let option = document.createElement('option');
                 option.setAttribute("value", i);
@@ -90,7 +90,7 @@
 
         } else {
             // 塗り薬の残量のセレクトボックス生成
-            let selectResidue2 = document.getElementById("selectResidue2");
+            let selectResidue2 = document.getElementById("ointResidue");
             for (let i = 0; i <= 10; i++) {
                 let option = document.createElement('option');
                 option.setAttribute("value", i);
@@ -120,6 +120,5 @@
         }
     });
 </script>
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/medicine_display.js') }}"></script>
 {% endblock %}

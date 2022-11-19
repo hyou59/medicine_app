@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 塗り薬の1本当たりの使用可能日数のセレクトボックス生成
     let selectOin = document.getElementById("selectOin");
-    for (let i = 0; i <= 30; i++) {
+    for (let i = 1; i <= 30; i++) {
         let option = document.createElement('option');
         option.setAttribute("value", i);
         option.textContent = i;

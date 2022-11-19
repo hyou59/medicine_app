@@ -1,0 +1,25 @@
+<!-- サイトトップ画面 -->
+
+{% extends "base.html" %}
+
+{% block title %}サイトトップ{% endblock %}
+
+{% block content %}
+<div class="mx-auto home-top main-background">
+
+    <header>TOP</header>
+
+    <section>
+        <p>■本サービスの概要</p>
+        <p>　本サービスでは服用しているお薬の残量を記録し、可視化することができます。</p>
+        <p class="mt-4">■サービス利用画面</p>
+        <div class="home-top-images-div">
+            <img src="{{ url_for('static', filename='images/デモ画像1.png') }}" alt="デモ画像1" class="home-top-image mb-3">
+            <img src="{{ url_for('static', filename='images/カレンダー_デモ画像.png') }}" alt="カレンダー_デモ画像" class="home-top-image mb-3">
+        </div>
+        <p><b>新規登録</b>の方は <a href="{{ url_for('auth.signup') }}">こちら</a> から<b>ユーザー登録</b>を行ってください。</p>
+        <p class="mt-1"><b>ユーザー登録済</b>の方は <a href="{{ url_for('auth.login') }}">こちら</a> から<b>ログイン</b>を行ってください。</p>
+    </section>
+
+</div>
+{% endblock %}

@@ -1,11 +1,12 @@
+import json
 from flask import Blueprint, render_template, request, current_app, redirect, url_for, flash
 from flask_paginate import Pagination, get_page_parameter
 from datetime import timedelta, date, datetime
-from apps.home.forms import NewMedicineForm, UpdateMedicineForm, DeleteMedicineForm, MedicineExaminationForm
+from apps.home.forms import NewMedicineForm, UpdateMedicineForm, DeleteMedicineForm, MedicineExaminationForm, DeleteCalendarEvent
 # dbをimportする
 from apps.app import db
 # Userクラスをimportする
-from apps.home.models import Medicine
+from apps.home.models import Medicine, Examination, Prescription
 from flask_login import login_required, current_user
 
 # Blueprintでhomeアプリを生成する
@@ -84,6 +85,32 @@ def home():
     return render_template("home/home.html", min_next_day=min_next_day, delete_form=delete_form, rows=res, pagination=pagination)
 
 
+# 削除ボタン押下時
+@hm.route("/delete", methods=["post"])
+@login_required
+def delete():
+    msg_list = []
+    # フォームで選択されたレコードのidをリストに格納
+    id_list = request.form.getlist("delete")
+
+    for id in id_list:
+        content = Medicine.query.filter_by(id=id).first()
+        # 該当するidのレコードの薬名をリストに格納する
+        msg_list.append(content.medi_name)
+
+        # 該当するidのレコードを削除する
+        db.session.delete(content)
+
+    # コミットする
+    db.session.commit()
+
+    # ホーム画面にメッセージ表示
+    for msg in msg_list:
+        flash(str(msg) + 'を削除しました。')
+
+    return redirect(url_for("home.home"))
+
+
 # 処方記録画面
 @hm.route("/medical_examination", methods=["GET", "POST"])
 @login_required
@@ -135,29 +162,78 @@ def medical_examination():
 
         # フォームで選択されたレコードのidをリストに格納
         unselected_id_list = request.form.getlist("notSeen")
-        mediResidue_list = request.form.getlist("mediResidue")
+        internal_residue_list = request.form.getlist("InternalResidue")
+        oint_residue_list = request.form.getlist("ointResidue")
+        ex_str_date = request.form["examinationDate"]
 
+        # 全てにチェックが付いている場合はリダイレクトする
+        if len(unselected_id_list) == len(internal_residue_list):
+            flash('一つ以上はチェックを外してください。')
+            return render_template("home/medical_examination.html", form=form, medi_list=medi_list)
+
+        # str型からdate型に変換
+        tdatetime = datetime.strptime(ex_str_date, '%Y-%m-%d')
+
+        examination_date = tdatetime.date()
+        user_name = str(current_user)
+
+        # レコードのインスタンス生成
+        content = Examination(
+            user_name = user_name,
+            examination_date = examination_date,
+            updated_at = datetime.today(),
+        )
+        # Examinationテーブルに追加してコミット
+        db.session.add(content)
+        db.session.commit()
+
+        # 先程登録したレコードのidを取得
+        examination_record = Examination.query.filter(Examination.user_name == user_name).order_by(Examination.updated_at.desc()).first()
+
+        l = 0
+        k = 0
         # 表示されている薬を順番に回す
         for i in range(len(medi_list)):
             # 処方されていない薬はスキップする
             if str(medi_list[i]["id"]) in unselected_id_list:
-                logger.debug(str(medi_list[i]["id"]) + "は選択されています:")
+                logger.debug(str(medi_list[i]["id"]) + "は選択されています")
                 continue
 
-            # 一致するidのレコードを取得
+            if medi_list[i]["medi_type"] == "飲み薬":
+                # 飲み薬であれば飲み薬のリストから取得
+                medi_residue = internal_residue_list[l]
+            else:
+                # 塗り薬であれば塗り薬のリストから取得
+                medi_residue = oint_residue_list[k]
+
+            # レコードのインスタンス生成
+            content = Prescription(
+                prescription_key = examination_record.id,
+                medi_name = medi_list[i]["medi_name"],
+                medi_type = medi_list[i]["medi_type"],
+                medi_residue = medi_residue,
+                updated_at = datetime.today(),
+            )
+            # prescriptionテーブルに追加してコミット
+            db.session.add(content)
+            db.session.commit()
+
+            # medicinesテーブルのidが一致するレコードを取得
             record = Medicine.query.filter_by(id=medi_list[i]["id"]).first()
 
             # 薬が無くなる予測日を算出
             if record.medi_type == "飲み薬":
-                record.medi_date = record.medi_date + timedelta(days=int(mediResidue_list[i]))
+                record.medi_date = record.medi_date + timedelta(days=int(internal_residue_list[l]))
+                l += 1
             else:
                 # 塗り薬であれば本数と日数をかけた値を残量に設定
-                record.medi_date = record.medi_date + (timedelta(days=int(mediResidue_list[i]) * int(record.medi_oin)))
+                record.medi_date = record.medi_date + (timedelta(days=int(oint_residue_list[k]) * int(record.medi_oin)))
+                k += 1
 
             # 更新日に今日の日付を設定
             record.updated_at = datetime.today()
 
-            # コミットする
+            # medicinesテーブルにコミット
             db.session.commit()
 
         # ホーム画面にメッセージ表示
@@ -166,33 +242,6 @@ def medical_examination():
         return redirect(url_for("home.home"))
 
     return render_template("home/medical_examination.html", form=form, medi_list=medi_list)
-
-
-# 削除ボタン押下時
-@hm.route("/delete", methods=["post"])
-@login_required
-def delete():
-
-    msg_list = []
-    # フォームで選択されたレコードのidをリストに格納
-    id_list = request.form.getlist("delete")
-    for id in id_list:
-
-        content = Medicine.query.filter_by(id=id).first()
-        # 該当するidのレコードの薬名をリストに格納する
-        msg_list.append(content.medi_name)
-
-        # 該当するidのレコードを削除する
-        db.session.delete(content)
-
-    # コミットする
-    db.session.commit()
-
-    # ホーム画面にメッセージ表示
-    for msg in msg_list:
-        flash(str(msg) + 'を削除しました。')
-
-    return redirect(url_for("home.home"))
 
 
 # 薬の新規登録画面
@@ -211,12 +260,12 @@ def medicine_register():
         medi_type = request.form["mediType"]
 
         if medi_type == "飲み薬":
-            medi_residue = request.form["mediResidue1"]
+            medi_residue = request.form["InternalResidue"]
             # 飲み薬の１本当たりの使用可能日数は""を設定
             medi_oin = ""
         else:
             # 塗り薬の残量は日数と本数をかけた値を設定
-            medi_residue = int(request.form["mediResidue2"]) * int(request.form["mediOin"])
+            medi_residue = int(request.form["ointResidue"]) * int(request.form["mediOin"])
             medi_oin = request.form["mediOin"]
         
         # 診察予定日を算出
@@ -278,12 +327,12 @@ def medicine_update(id: int):
         record.medi_name = form.medi_name.data
 
         if record.medi_type == "飲み薬":
-            medi_residue = request.form["mediResidue1"]
+            medi_residue = request.form["InternalResidue"]
             # 飲み薬であれば1本当たりの使用可能数は""を設定
             record.medi_oin = ""
         else:
             # 塗り薬であれば本数と日数をかけた値を残量に設定
-            medi_residue = int(request.form["mediResidue2"]) * int(request.form["mediOin"])
+            medi_residue = int(request.form["ointResidue"]) * int(request.form["mediOin"])
             record.medi_oin = request.form["mediOin"]
 
         # 更新日に今日の日付を設定
@@ -307,5 +356,68 @@ def medicine_update(id: int):
 @hm.route('/calendar')
 @login_required
 def calendar():
+    logger = current_app.logger
 
-    return render_template('home/calendar.html')
+    form = DeleteCalendarEvent()
+
+    # 対象ユーザーのレコードを取得する
+    all_record = Examination.query.filter_by(user_name=str(current_user)).all()
+    
+    # レコードの存在チェック
+    if all_record == []:
+        logger.debug("Examinationレコード無し")
+        ex_date_list = []
+        ex_id_list = []
+        return render_template('home/calendar.html', form=form, ex_date_list=ex_date_list, ex_id_list=ex_id_list)
+    
+    ex_date_list = []
+    ex_id_list = []
+    for i in range(len(all_record)):
+        ex_date_list.append(all_record[i].examination_date)
+        ex_id_list.append(all_record[i].id)
+
+    return render_template('home/calendar.html', form=form, ex_date_list=ex_date_list, ex_id_list=ex_id_list)
+
+
+# カレンダー画面の削除ボタン押下時
+@hm.route("/calendar/delete", methods=["post"])
+@login_required
+def event_delete():
+
+    # フォームで選択されたレコードのidをリストに格納
+    id = request.form["pass-value"]
+
+    content = Examination.query.filter_by(id=id).first()
+
+    # 該当するidのレコードを削除する
+    db.session.delete(content)
+
+    # コミットする
+    db.session.commit()
+
+    # ホーム画面にメッセージ表示
+    flash('記録を削除しました。')
+
+    return redirect(url_for("home.calendar"))
+
+
+# ajaxによるイベント表示時
+@hm.route("/calendar/detail", methods=["post"])
+@login_required
+def event_detail():
+    if request.method == "POST":
+        # イベントのidを取得
+        id = request.form["id"]
+        prescription_result = Prescription.query.filter_by(prescription_key=id).all()
+
+        prescription_list = []
+        for prescription_data in prescription_result:
+            prescription_dict = {}
+            prescription_dict["medi_name"] = prescription_data.medi_name
+            prescription_dict["medi_residue"] = prescription_data.medi_residue
+            prescription_dict["medi_type"] = prescription_data.medi_type
+            prescription_list.append(prescription_dict)
+
+        return prescription_list
+
+    return redirect(url_for("home.calendar"))

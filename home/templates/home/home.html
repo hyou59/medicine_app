@@ -1,4 +1,4 @@
-<!-- トップ画面 -->
+<!-- ホーム画面 -->
 
 {% extends "base.html" %}
 
@@ -45,7 +45,7 @@
                 </div>
             </div>
 
-            <table class="table table-bordered" id="table1" cellspacing="0" cellpadding="0">
+            <table class="table table-bordered" id="list_table" cellspacing="0" cellpadding="0">
                 <thead class="table-success">
                     <tr>
                         <th>お薬の名前</th><th>お薬の種類</th><th>残量（塗り薬の残り本数）</th><th>更新日</th>
@@ -90,11 +90,11 @@
             </div>
 
             <!-- Modal表示 -->
-            <div class="modal fade" id="delete_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="delete_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <h5 class="modal-title" id="staticBackdropLabel">削除の確認</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
 
@@ -112,11 +112,9 @@
                     </div>
                 </div>
             </div>
-
         {% endif %}
     </section>
 
 </div>
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/home_display.js') }}"></script>
 {% endblock %}

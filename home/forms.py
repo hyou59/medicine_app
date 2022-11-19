@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 # ブラウザでフォームデータを扱うためのライブラリ
-from wtforms import StringField, SubmitField
+from wtforms import StringField, BooleanField, SubmitField
 # 必須チェック、文字列の長さチェック用
 from wtforms.validators import DataRequired, Length
 
@@ -38,6 +38,12 @@ class UpdateMedicineForm(FlaskForm):
 class DeleteMedicineForm(FlaskForm):
     submit = SubmitField("削除")
 
+
 # 処方記録フォームクラス
 class MedicineExaminationForm(FlaskForm):
     submit = SubmitField("登録")
+
+
+# カレンダーイベント削除フォームクラス
+class DeleteCalendarEvent(FlaskForm):
+    submit = SubmitField("削除")
