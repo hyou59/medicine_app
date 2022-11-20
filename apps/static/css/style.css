@@ -87,6 +87,7 @@ input[type=checkbox] {
 /* 新規・更新画面は最初は非表示にし、jsで表示させちらつきを解消させる */
 .home-register-medicine {
     width: 400px;
+    max-width: 100%;
     display: none;
 }
 .home-register-medicine header {
