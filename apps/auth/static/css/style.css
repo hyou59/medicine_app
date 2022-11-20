@@ -1,6 +1,7 @@
 /* ログイン・新規登録画面 */
 .auth-login-main {
     width: 400px;
+    max-width: 100%;
     margin-top: 45px;
     height: 320px;
 }
