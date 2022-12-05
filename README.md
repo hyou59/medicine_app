@@ -3,6 +3,7 @@
 お薬管理アプリ
 
 処方しているお薬を記録し、残量の可視化が行えるサービスです。
+https://medicine-app.onrender.com/index
 
 # Requirement
 
@@ -25,7 +26,7 @@ flask db upgrade
 flask run
 ```
 
-# テスト実行
+## テスト実行
 ```
 pytest tests/auth
 pytest tests/home
