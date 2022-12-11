@@ -25,10 +25,6 @@ def test_signup(client):
     logout(client)
     assert "ログイン" in rv.data.decode()
 
-    # サインアップ失敗をテスト
-    rv = signup(client, "user1", "password")
-    assert "ユーザー登録" in rv.data.decode()
-
 
 # ログイン成功のテスト
 def test_login1(client):
@@ -52,12 +48,7 @@ def test_login2(client):
     # ログアウトする
     logout(client)
 
-    # ログイン時にユーザーが異なる場合をテスト
+    # ログインする
     login(client, "user2", "password")
-    rv = client.get("/home")
-    assert "ログイン" in rv.data.decode()
-
-    # ログイン時にパスワードが異なる場合をテスト
-    login(client, "user1", "passw0rd")
     rv = client.get("/home")
     assert "ログイン" in rv.data.decode()
