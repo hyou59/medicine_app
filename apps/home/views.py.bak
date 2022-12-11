@@ -167,7 +167,7 @@ def medical_examination():
         ex_str_date = request.form["examinationDate"]
 
         # 全てにチェックが付いている場合はリダイレクトする
-        if len(unselected_id_list) == len(internal_residue_list) + len(oint_residue_list):
+                if len(unselected_id_list) == len(internal_residue_list) + len(oint_residue_list):
             flash('一つ以上はチェックを外してください。')
             return render_template("home/medical_examination.html", form=form, medi_list=medi_list)
 

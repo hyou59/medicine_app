@@ -36,30 +36,6 @@ def medicine_delete(client, del_list):
     return client.post("/delete", data=data, follow_redirects=True)
 
 
-# 処方記録の実行関数
-def examination(client, examination_date, unselected_id_list, internal_residue, oint_residue_list):
-    # 辞書の中にリストを格納する
-    data = defaultdict(list)
-
-    # 処方日を追加
-    data["examinationDate"].append(examination_date)
-
-    # notSeenのキーに値を格納する
-    for i in unselected_id_list:
-        data["notSeen"].append(i)
-
-    # InternalResidueのキーに値を格納する
-    for i in internal_residue:
-        data["InternalResidue"].append(i)
-
-    # ointResidueのキーに値を格納する
-    for i in oint_residue_list:
-        data["ointResidue"].append(i)
-
-    print(data)
-    return client.post("/medical_examination", data=data, follow_redirects=True)
-
-
 # トップ画面のテスト
 def test_index(client):
     rv = client.get("/")
@@ -123,46 +99,16 @@ def test_medicine_delete(client):
     assert "薬2" not in rv.data.decode()
 
 
-# 処方記録画面の登録テスト
-def test_examination(client):
-    # サインアップを実行する
-    signup(client, "user1", "password")
-    # 薬を登録する
-    internal_register(client, "薬1", "飲み薬", 30)
-    ointment_register(client, "薬2", "塗り薬", 3, 4)
-    # 処方記録を行う
-    unselected_id_list = []
-    internal_residue_list = [30]
-    oint_residue_list = [3]
-    examination(client, "2022-12-11", unselected_id_list, internal_residue_list, oint_residue_list)
-    # ホーム画面を表示
-    rv = client.get("/home")
-    assert "60日分" in rv.data.decode()
-
-    # 処方時に処方していない薬の項目を全て選択する
-    unselected_id_list = [1,2]
-    examination(client, "2022-12-11", unselected_id_list, internal_residue_list, oint_residue_list)
-    assert "60日分" in rv.data.decode()
-
-
-# カレンダー画面の削除テスト
+# カレンダー画面のテスト
 def test_calendar(client):
     # サインアップを実行する
     signup(client, "user1", "password")
-    # 薬を登録する
-    internal_register(client, "薬1", "飲み薬", 30)
-    ointment_register(client, "薬2", "塗り薬", 3, 4)
-    # 処方記録を行う
-    unselected_id_list = []
-    internal_residue_list = [30]
-    oint_residue_list = [3]
-    examination(client, "2022-12-11", unselected_id_list, internal_residue_list, oint_residue_list)
     # カレンダー画面を表示する
     rv = client.get("/calendar")
     assert "カレンダー表示画面" in rv.data.decode()
 
 
-# カスタムエラー画面（404）のテスト
+# カスタムエラー画面のテスト
 def test_custom_error(client):
     rv = client.get("/notfound")
     assert "404 Not Found" in rv.data.decode()
