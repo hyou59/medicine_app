@@ -4,7 +4,7 @@
 
 処方しているお薬を記録し、残量の可視化が行えるサービスです。
 
-https://medicine-app.onrender.com/index
+サービスURL：https://medicine-app.onrender.com/index
 
 # Requirement
 
